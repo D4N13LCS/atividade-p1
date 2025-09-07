@@ -157,7 +157,8 @@ async def root():
 
 ## 🖼️ app/static/home.html
 
-![alt text](image.png)
+<img width="1600" height="529" alt="image" src="https://github.com/user-attachments/assets/2276dda1-bb66-412a-b4ba-75db4914e9e9" />
+
 
 Página simples que serve como UI para a API.
 
