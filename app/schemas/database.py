@@ -1,9 +1,9 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 
-# Dados do MongoDB (como configurou no docker-compose)
+# Dados do MongoDB
 MONGO_USER = "admin"
 MONGO_PASS = "secret"
-MONGO_HOST = "db"          # <-- nome do serviço do MongoDB no docker-compose
+MONGO_HOST = "db"          # nome do serviço do MongoDB no docker-compose
 MONGO_PORT = 27017
 DB_NAME = "mydatabase"
 
