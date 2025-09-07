@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gerenciamento de Usuários</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="card" style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+    <h2 style="margin:0; font-size:1.2rem;">Usuários</h2>
+    <button id="btn-show-create" class="btn-create" title="Criar Novo Usuário">Create</button>
+  </nav>
+
+  <main class="container" role="main">
+    <section style="flex:1;">
+      <div id="create-form" class="card forms" style="display:none; margin-bottom:16px;">
+        <label for="id-create">Criar Novo Usuário</label>
+        <input id="id-create" name="id" type="number" placeholder="ID..." aria-label="ID" min=1 style="padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;min-width:120px">
+        <input id="name-create" name="name" type="text" placeholder="Nome..." aria-label="Nome" style="padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;min-width:160px">
+        <button class="btn-create" id="submit-create">Create</button>
+      </div>
+
+      <div id="users-list" class="forms">
+        <!-- Lista de usuários será injetada aqui -->
+      </div>
+    </section>
+
+    <aside class="card preview" aria-label="Informações">
+      <div class="meta">Dicas rápidas</div>
+      <div class="meta">• Cada usuário possui botões de Edit e Delete para editar e deletar usuários respectivamente.</div>
+      <div class="meta">• Clique em Create para adicionar um novo usuário.</div>
+      <div class="meta">• Caso queira fechar a janela de criação de usuários, basta clicar novamente no botão "create" no topo da página.</div>
+    </aside>
+  </main>
+
+  <script>
+  // Mostrar/ocultar formulário de Create
+document.getElementById('btn-show-create').addEventListener('click', () => {
+  const form = document.getElementById('create-form');
+  form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+});
+
+// Função para buscar e listar usuários
+async function fetchUsers() {
+  try {
+    const res = await fetch("http://localhost:8000/show");
+    const data = await res.json();
+
+    const container = document.getElementById('users-list');
+    container.innerHTML = "";
+
+    if (!data.usuarios || data.usuarios.length === 0) {
+      container.innerHTML = '<p>Nenhum usuário cadastrado.</p>';
+      return;
+    }
+
+    data.usuarios.forEach(user => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <strong>ID:</strong> ${user.id} <br/>
+        <strong>Nome:</strong> ${user.name} <br/><br/>
+        <button class="btn-edit" data-id="${user.id}" data-name="${user.name}">Editar</button>
+        <button class="btn-delete" data-id="${user.id}">Deletar</button>
+      `;
+      container.appendChild(card);
+    });
+
+    // Associar eventos aos botões Edit (agora dinâmicos)
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const new_name = prompt('Informe o novo nome:', btn.dataset.name);
+        if (!new_name) return;
+
+        try {
+          const res = await fetch("http://localhost:8000/edit", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: parseInt(btn.dataset.id), new_name })
+          });
+          const data = await res.json();
+          alert(data.success_message);
+          fetchUsers();
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
+
+    // Associar eventos aos botões Delete (agora dinâmicos)
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm(`Confirma a deleção do usuário ID ${btn.dataset.id}?`)) return;
+
+        try {
+          const res = await fetch("http://localhost:8000/delete", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: parseInt(btn.dataset.id) })
+          });
+          const data = await res.json();
+          alert(data.success_message);
+          fetchUsers();
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('users-list').innerHTML = '<p>Erro ao carregar usuários.</p>';
+  }
+}
+
+fetchUsers();
+
+// Criar usuário
+document.getElementById('submit-create').addEventListener('click', async () => {
+  const id = document.getElementById('id-create').value.trim();
+  const name = document.getElementById('name-create').value.trim();
+
+  if (!id || !name) {
+    alert('Informe ID e Nome');
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:8000/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: parseInt(id), name })
+    });
+    const data = await res.json();
+    alert(data.success_message);
+    fetchUsers();
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+  </script>
+</body>
+</html>
