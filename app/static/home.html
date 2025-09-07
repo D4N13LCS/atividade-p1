@@ -67,7 +67,7 @@ async function fetchUsers() {
       container.appendChild(card);
     });
 
-    // Associar eventos aos botões Edit (agora dinâmicos)
+    // Associar eventos aos botões Edit
     document.querySelectorAll('.btn-edit').forEach(btn => {
       btn.addEventListener('click', async () => {
         const new_name = prompt('Informe o novo nome:', btn.dataset.name);
@@ -88,7 +88,7 @@ async function fetchUsers() {
       });
     });
 
-    // Associar eventos aos botões Delete (agora dinâmicos)
+    // Associar eventos aos botões Delete
     document.querySelectorAll('.btn-delete').forEach(btn => {
       btn.addEventListener('click', async () => {
         if (!confirm(`Confirma a deleção do usuário ID ${btn.dataset.id}?`)) return;
