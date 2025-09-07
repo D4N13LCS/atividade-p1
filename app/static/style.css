@@ -1,9 +1,9 @@
 :root{
-      --bg:#0f1724; /* deep blue */
+      --bg:#0f1724; 
       --card:#0b1220;
       --muted:#94a3b8;
-      --accent:#7c3aed; /* violet */
-      --accent-2:#06b6d4; /* teal */
+      --accent:#7c3aed; 
+      --accent-2:#06b6d4; 
       --glass: rgba(255,255,255,0.04);
       --radius:12px;
       --gap:16px;
@@ -42,7 +42,7 @@
       border-radius:10px;padding:18px;border:1px solid rgba(255,255,255,0.03)
     }
 
-    /* form column */
+   
     .forms{
       display:flex;
       flex-direction:column;
@@ -86,10 +86,10 @@
     .btn-edit{background:linear-gradient(90deg,var(--accent-2), #0ea5b2)}
     .btn-delete{background:linear-gradient(90deg,#ef4444,#dc2626)}
 
-    /* small helper */
+   
     .meta{font-size:0.87rem;color:var(--muted);}
 
-    /* right column */
+   
     .preview{padding:18px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
     .kbd{background:#071428;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);font-size:0.85rem}
 
